@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('description')->nullable();
-            $table->foreignId('service_list_id')->nullable()->constrained('services__lists')->onDelete('cascade');
+            // $table->foreignId('service_list_id')->nullable()->constrained('services__lists')->onDelete('cascade');
+            $table->string('service_list')->nullable();
             $table->timestamps();
         });
     }

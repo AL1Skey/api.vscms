@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BrandController extends Controller
 {
@@ -12,8 +13,13 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::all();
-        return response()->json($brands);
+        try {
+            $brands = Brand::all();
+            return response()->json($brands);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Failed to retrieve brands'], 500);
+        }
     }
 
     /**
@@ -21,45 +27,70 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->handleRequest($request);
-        $imagePath = $request->hasFile('image') && $request->file('image')->isValid() ? 'storage/app/public/'.$request->file('image')->store('images', 'public') : null;
-        $imageUrl = $imagePath ? asset($imagePath) : null;
-        $data['image'] = $imageUrl;
-        $brand = Brand::create($data);
-        return response()->json($brand, 201);
+        try {
+            $data = $this->handleRequest($request);
+            $imagePath = $request->hasFile('image') && $request->file('image')->isValid() ? 'storage/app/public/'.$request->file('image')->store('images', 'public') : null;
+            $imageUrl = $imagePath ? asset($imagePath) : null;
+            $data['image'] = $imageUrl;
+            $brand = Brand::create($data);
+            return response()->json($brand, 201);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Failed to create brand'], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show( $brand)
+    public function show($brand)
     {
-        $brand = Brand::find($brand);
-        return response()->json($brand);
+        try {
+            $brand = Brand::find($brand);
+            if (!$brand) {
+                return response()->json(['error' => 'Brand not found'], 404);
+            }
+            return response()->json($brand);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Failed to retrieve brand'], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand)
+    public function update(Request $request, $id)
     {
-        $data = $this->handleRequest($request);
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            $imagePath = 'storage/app/public/'.$request->file('image')->store('images', 'public');
-            $imageUrl = asset($imagePath);
-            $data['image'] = $imageUrl;
+        try {
+            $brand = Brand::findOrFail($id);
+            $data = $this->handleRequest($request);
+            if($request->hasFile('image') && $request->file('image')->isValid()){
+                $imagePath = 'storage/app/public/'.$request->file('image')->store('images', 'public');
+                $imageUrl = asset($imagePath);
+                $data['image'] = $imageUrl;
+            }
+            $brand->update($data);
+            return response()->json($brand);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Failed to update brand'], 500);
         }
-        $brand->update($data);
-        return response()->json($brand);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Brand $brand)
+    public function destroy($id)
     {
-        $brand->delete();
-        return response()->json(null, 204);
+        try {
+            $brand= Brand::findOrFail($id);
+            $brand->delete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Failed to delete brand'], 500);
+        }
     }
 
     private function sanitizeInput($input)

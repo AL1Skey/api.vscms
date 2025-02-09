@@ -42,7 +42,7 @@ class TemplateController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'service_list_id' => 'nullable|string',
+            'service_list' => 'nullable|string',
         ]);
 
         $data = $this->handleRequest($request);

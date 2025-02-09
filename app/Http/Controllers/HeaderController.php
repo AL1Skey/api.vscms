@@ -38,8 +38,9 @@ class HeaderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Header $header)
+    public function update(Request $request,  $id)
     {
+        $header = Header::findOrFail($id);
         $data = $this->handleRequest($request);
         $header->update($data);
         return response()->json($header);
@@ -48,8 +49,9 @@ class HeaderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Header $header)
+    public function destroy($id)
     {
+        $header = Header::findOrFail($id);
         $header->delete();
         return response()->json(null, 204);
     }

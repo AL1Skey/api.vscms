@@ -38,8 +38,9 @@ class FooterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Footer $footer)
-    {
+    public function update(Request $request,  $id)
+    {   
+        $footer = Footer::findOrFail($id);
         $data = $this->handleRequest($request);
         $footer->update($data);
         return response()->json($footer);
@@ -48,8 +49,9 @@ class FooterController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Footer $footer)
+    public function destroy($id)
     {
+        $footer = Footer::findOrFail($id);
         $footer->delete();
         return response()->json(null, 204);
     }
@@ -63,5 +65,10 @@ class FooterController extends Controller
             }
         }
         return $data;
+    }
+
+    private function sanitizeInput($input)
+    {
+        return htmlspecialchars(strip_tags($input));
     }
 }

@@ -8,5 +8,5 @@ class Footer extends Model
 {
     //
     protected $table = 'footers';
-    protected $fillable = ['logo', 'description'];
+    protected $fillable = ['title', 'description', 'phone', 'email', 'address'];
 }

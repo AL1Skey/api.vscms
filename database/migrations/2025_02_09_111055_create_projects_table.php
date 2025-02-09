@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('footers', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('description');
-            $table->string('phone');
-            $table->string('email');
-            $table->string('address');
+            $table->string('image')->nullable();
+            $table->string('name')->nullable();
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('footers');
+        Schema::dropIfExists('projects');
     }
 };

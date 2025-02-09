@@ -29,7 +29,7 @@ class ServicesListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show( $services_list)
+    public function show($services_list)
     {
         $services_list = ServicesList::find($services_list);
         return response()->json($services_list);
@@ -38,8 +38,9 @@ class ServicesListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ServicesList $services_list)
+    public function update(Request $request,  $id)
     {
+        $services_list = ServicesList::findOrFail($id);
         $data = $this->handleRequest($request);
         $services_list->update($data);
         return response()->json($services_list);
@@ -48,8 +49,9 @@ class ServicesListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ServicesList $services_list)
-    {
+    public function destroy($id)
+    {   
+        $services_list = ServicesList::findOrFail($id);
         $services_list->delete();
         return response()->json(null, 204);
     }
