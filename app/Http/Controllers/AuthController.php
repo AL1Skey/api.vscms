@@ -32,20 +32,26 @@ class AuthController extends Controller
         }
     }
 
+    // Override behaviour of unauthenticated method
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return response()->json(['error' => 'Unauthenticated.'], 401);
+    }
+
     public function verify(Request $request)
     {
         try{
             $bearer = $request->bearerToken();
-            $token = explode(' ', $bearer);
-            [$id, $token] = explode('|', $token[0]);
+            $token = explode(' ', $bearer)[0];
+            // [$id, $token] = explode('|', $token[0]);
             $token = PersonalAccessToken::findToken($token);
             // [$id, $token] = explode('|', $token[0]);
             // $token = Token::where('token', )->first();
             // dd(Token::all());
             if($token){
-                return response()->json(['msg' => "Token is valid"], 200);
+                return response()->json(['status' => true], 200);
             }else{
-                return response()->json(['error' => "Token is invalid"], 401);
+                return response()->json(['status' => false], 401);
             }
         }
         catch(\Throwable $th){
