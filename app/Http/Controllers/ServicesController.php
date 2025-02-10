@@ -5,7 +5,7 @@ use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class TemplateController extends Controller
+class ServicesController extends Controller
 {
     public function index(Request $request)
     {
@@ -30,7 +30,7 @@ class TemplateController extends Controller
             $query->where('pembeli', 'like', '%' . $request->get('pembeli') . '%');
         }
         // Include the 'category' relationship in the query results
-        $query->with('service_list_id');
+        // $query->with('service_list_id');
         // Pagination
         $services = $query->paginate(10);
 
@@ -44,18 +44,16 @@ class TemplateController extends Controller
             'description' => 'nullable|string',
             'service_list' => 'nullable|string',
         ]);
-
-        $data = $this->handleRequest($request);
        
         $data = $this->handleRequest($request);
-        $services = Header::create($data);
+        $services = Services::create($data);
         return response()->json($services, 201);
     }
 
     public function show($id)
     {
         $query = Services::query();
-        $query->with('category');
+        // $query->with('category');
         $services = $query->findOrFail($id);
         return response()->json($services);
     }
@@ -65,8 +63,8 @@ class TemplateController extends Controller
         $services = Services::findOrFail($id);
 
         $data = $this->handleRequest($request);
-        $header->update($data);
-        return response()->json($header);
+        $services->update($data);
+        return response()->json($services);
     }
 
     public function destroy($id)

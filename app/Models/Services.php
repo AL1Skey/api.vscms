@@ -8,10 +8,10 @@ class Services extends Model
 {
     //
     protected $table = 'services';
-    protected $fillable = ['title', 'description', 'service_list_id'];
+    protected $fillable = ['title', 'description', 'service_list'];
 
-    public function serviceList()
-    {
-        return $this->belongsTo(ServicesList::class, 'service_list_id');
-    }
+    // public function serviceList()
+    // {
+    //     return $this->belongsTo(ServicesList::class, 'service_list_id');
+    // }
 }

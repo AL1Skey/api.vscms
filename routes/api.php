@@ -14,6 +14,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
+Route::group(["prefix"=>"public"], function(){
+    Route::get('/brands', [BrandController::class, 'index']);
+    Route::get('/headers', [HeaderController::class, 'index']);
+    Route::get('/footers', [FooterController::class, 'index']);
+    Route::get('/services', [ServicesController::class, 'index']);
+    Route::get('/projects', [ProjectController::class, 'index']);
+});
 
 
 Route::get('/me', [AuthController::class, 'verify']);
